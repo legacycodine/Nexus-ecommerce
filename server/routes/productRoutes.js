@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const admin = require("../middleware/adminMiddleware");
 
 const {
   getProducts,
@@ -16,7 +17,7 @@ router.get("/:id", getProductById);
 
 
 // PROTECTED ROUTES
-router.post("/", protect, createProduct);
+router.post("/", protect, admin, createProduct);
 
 
 module.exports = router;
