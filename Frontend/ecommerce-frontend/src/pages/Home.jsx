@@ -4,7 +4,7 @@ const Home = () => {
   return (
     <MainLayout>
 
-      <h1 className="text-3xl font-bold">
+      <h1 className="text-3xl font-bold mb-6">
         Latest Products
       </h1>
 
