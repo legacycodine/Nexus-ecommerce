@@ -26,12 +26,12 @@ const Home = () => {
       </h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-
-        {products.map((product) => (
-          <ProductCard key={product._id} product={product} />
-        ))}
-
-      </div>
+  {products.map((product) => (
+    <div key={product._id} className="border rounded-lg shadow-md overflow-hidden bg-white">
+       <ProductCard product={product} />
+    </div>
+  ))}
+</div>
 
     </MainLayout>
   );
