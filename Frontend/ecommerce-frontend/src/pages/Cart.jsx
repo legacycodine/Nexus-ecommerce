@@ -3,7 +3,8 @@ import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';
 
 const Cart = () => {
-  const { cartItems, addToCart, removeFromCart } = useCart();
+  // 1. Update the destructuring to include decreaseQty and removeItemCompletely
+  const { cartItems, addToCart, decreaseQty, removeItemCompletely } = useCart();
 
   // Calculate Subtotal
   const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.qty, 0);
@@ -30,12 +31,20 @@ const Cart = () => {
                 <div className="flex-grow">
                   <h3 className="font-bold text-lg">{item.name}</h3>
                   <p className="text-gray-500">${item.price}</p>
+                  {/* Optional: Add a 'Remove' text button to delete the whole row */}
+                  <button 
+                    onClick={() => removeItemCompletely(item._id)}
+                    className="text-xs text-red-400 hover:underline mt-1"
+                  >
+                    Remove item
+                  </button>
                 </div>
 
                 {/* Quantity Controls */}
                 <div className="flex items-center space-x-3 border rounded-lg px-2">
+                  {/* 2. Update this button to use decreaseQty */}
                   <button 
-                    onClick={() => removeFromCart(item._id)} // We can refine this to decrease later
+                    onClick={() => decreaseQty(item._id)} 
                     className="text-xl font-bold px-2 hover:text-red-500"
                   >
                     -
