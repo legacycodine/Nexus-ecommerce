@@ -1,4 +1,5 @@
 import { createContext, useState, useContext, useEffect } from 'react';
+import { toast } from 'react-hot-toast'; // 1. Added toast import
 
 // 1. Create the Context
 const CartContext = createContext();
@@ -28,6 +29,9 @@ export const CartProvider = ({ children }) => {
       }
       return [...prevItems, { ...product, qty: 1 }];
     });
+
+    // 2. Trigger the notification bubble
+    toast.success(`${product.name} added to cart!`);
   };
 
   // Decreases quantity by 1, or removes if qty is 1
@@ -48,6 +52,7 @@ export const CartProvider = ({ children }) => {
   // Removes the item entirely (Trash can functionality)
   const removeItemCompletely = (id) => {
     setCartItems((prevItems) => prevItems.filter((x) => x._id !== id));
+    toast.error('Item removed from cart'); // Optional: Added feedback for removal
   };
 
   return (

@@ -1,19 +1,37 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import Cart from "./pages/Cart";
-import Login from "./pages/Login";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast'; // 1. Import the manager
+import Navbar from './components/Navbar';
+import Home from './pages/Home';
+import Cart from './pages/Cart';
+import Login from './pages/Login';
+import ProductDetails from './pages/ProductDetails';
+import Checkout from './pages/Checkout';
 
 function App() {
   return (
-    <BrowserRouter>
-
+    <Router>
+      {/* 2. Place the Toaster here. 
+          I've set it to bottom-right to keep it out of the way of your Navbar */}
+      <Toaster 
+        position="bottom-right" 
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: '#333',
+            color: '#fff',
+          },
+        }} 
+      />
+      
+      <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<Checkout />} />
         <Route path="/login" element={<Login />} />
       </Routes>
-
-    </BrowserRouter>
+    </Router>
   );
 }
 
