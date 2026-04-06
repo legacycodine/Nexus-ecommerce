@@ -16,31 +16,49 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
   }, [cartItems]);
 
+  // Adds an item or increases quantity by 1
   const addToCart = (product) => {
     setCartItems((prevItems) => {
-      // Check if item already exists in cart
       const existItem = prevItems.find((x) => x._id === product._id);
       
       if (existItem) {
-        // If it exists, increase the quantity
         return prevItems.map((x) =>
           x._id === product._id ? { ...existItem, qty: existItem.qty + 1 } : x
         );
       }
-      // If it's new, add it to the array with qty 1
       return [...prevItems, { ...product, qty: 1 }];
     });
-    
-    // Quick confirmation for now
-    alert(`${product.name} added to cart!`);
   };
 
-  const removeFromCart = (id) => {
+  // Decreases quantity by 1, or removes if qty is 1
+  const decreaseQty = (id) => {
+    setCartItems((prevItems) => {
+      const existItem = prevItems.find((x) => x._id === id);
+      
+      if (existItem.qty === 1) {
+        return prevItems.filter((x) => x._id !== id);
+      }
+      
+      return prevItems.map((x) =>
+        x._id === id ? { ...existItem, qty: existItem.qty - 1 } : x
+      );
+    });
+  };
+
+  // Removes the item entirely (Trash can functionality)
+  const removeItemCompletely = (id) => {
     setCartItems((prevItems) => prevItems.filter((x) => x._id !== id));
   };
 
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart }}>
+    <CartContext.Provider 
+      value={{ 
+        cartItems, 
+        addToCart, 
+        decreaseQty, 
+        removeItemCompletely 
+      }}
+    >
       {children}
     </CartContext.Provider>
   );
