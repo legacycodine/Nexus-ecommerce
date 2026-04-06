@@ -1,34 +1,27 @@
-import { Link } from "react-router-dom";
+import React from 'react';
+import { useCart } from '../context/CartContext'; // 1. Import the hook
 
 const ProductCard = ({ product }) => {
+  const { addToCart } = useCart(); // 2. Pull the function from context
+
   return (
-    /* This 'max-w-[300px]' is the secret to stopping the card from being too wide */
-    <div className="max-w-[300px] mx-auto rounded-lg border border-gray-200 bg-white shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+    <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col h-full">
+      <img 
+        src={product.image} 
+        alt={product.name} 
+        className="w-full h-48 object-cover rounded-lg mb-4"
+      />
+      <h3 className="text-lg font-bold text-gray-800">{product.name}</h3>
+      <p className="text-sm text-gray-500 mb-4 flex-grow">{product.description}</p>
       
-      {/* Container for the image with a fixed height */}
-      <div className="h-48 w-full overflow-hidden bg-gray-100">
-        <img
-          src={product.image}
-          alt={product.name}
-          className="h-full w-full object-cover"
-        />
-      </div>
-
-      <div className="p-4 text-center">
-        <h5 className="mb-2 text-lg font-bold tracking-tight text-gray-900 truncate">
-          {product.name}
-        </h5>
-        
-        <p className="mb-3 text-sm text-gray-600 line-clamp-2">
-          {product.description}
-        </p>
-
-        <div className="mt-4">
-          <p className="text-xl font-bold text-gray-900 mb-2">${product.price}</p>
-          <button className="w-full rounded-md bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 transition-colors">
-            Add to Cart
-          </button>
-        </div>
+      <div className="flex items-center justify-between mt-auto">
+        <span className="text-xl font-bold">${product.price}</span>
+        <button 
+          onClick={() => addToCart(product)} // 3. Link the click to the function
+          className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
+        >
+          Add to Cart
+        </button>
       </div>
     </div>
   );
