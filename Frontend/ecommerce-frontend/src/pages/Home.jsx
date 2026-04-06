@@ -20,20 +20,22 @@ const Home = () => {
 
   return (
     <MainLayout>
-
-      <h1 className="text-3xl font-bold mb-6">
-        Latest Products
-      </h1>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-  {products.map((product) => (
-    <div key={product._id} className="border rounded-lg shadow-md overflow-hidden bg-white">
-       <ProductCard product={product} />
+  {/* The 'container' and 'mx-auto' keeps the whole store centered and neat */}
+  <div className="container mx-auto px-4 py-8">
+  <h1 className="text-3xl font-bold mb-8 text-center">Latest Products</h1>
+  
+  {/* Ensure 'products' exists and has a length */}
+  {products && products.length > 0 ? (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      {products.map((product) => (
+        <ProductCard key={product._id} product={product} />
+      ))}
     </div>
-  ))}
+  ) : (
+    <p className="text-center">Loading products...</p>
+  )}
 </div>
-
-    </MainLayout>
+</MainLayout>
   );
 };
 
