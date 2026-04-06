@@ -1,18 +1,16 @@
 import { createContext, useState, useContext, useEffect } from 'react';
-import { toast } from 'react-hot-toast'; // 1. Added toast import
+import { toast } from 'react-hot-toast';
 
 // 1. Create the Context
 const CartContext = createContext();
 
 // 2. Create the Provider
 export const CartProvider = ({ children }) => {
-  // Initialize cart from localStorage if it exists, otherwise empty array
   const [cartItems, setCartItems] = useState(() => {
     const savedCart = localStorage.getItem('cartItems');
     return savedCart ? JSON.parse(savedCart) : [];
   });
 
-  // Save to localStorage whenever cartItems changes
   useEffect(() => {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
   }, [cartItems]);
@@ -30,8 +28,13 @@ export const CartProvider = ({ children }) => {
       return [...prevItems, { ...product, qty: 1 }];
     });
 
-    // 2. Trigger the notification bubble
     toast.success(`${product.name} added to cart!`);
+  };
+
+  // NEW: Clears the entire cart (Used after successful checkout)
+  const clearCart = () => {
+    setCartItems([]);
+    localStorage.removeItem('cartItems');
   };
 
   // Decreases quantity by 1, or removes if qty is 1
@@ -49,10 +52,10 @@ export const CartProvider = ({ children }) => {
     });
   };
 
-  // Removes the item entirely (Trash can functionality)
+  // Removes the item entirely
   const removeItemCompletely = (id) => {
     setCartItems((prevItems) => prevItems.filter((x) => x._id !== id));
-    toast.error('Item removed from cart'); // Optional: Added feedback for removal
+    toast.error('Item removed from cart');
   };
 
   return (
@@ -61,7 +64,8 @@ export const CartProvider = ({ children }) => {
         cartItems, 
         addToCart, 
         decreaseQty, 
-        removeItemCompletely 
+        removeItemCompletely,
+        clearCart // Added to the provider value
       }}
     >
       {children}

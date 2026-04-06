@@ -4,10 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 
 const Checkout = () => {
-  const { cartItems, subtotal } = useCart(); // Assuming subtotal is in context, or calculate here
+  // 1. Pull clearCart from useCart
+  const { cartItems, clearCart } = useCart(); 
   const navigate = useNavigate();
   
-  // Calculate total if not in context
   const total = cartItems.reduce((acc, item) => acc + item.price * item.qty, 0);
 
   const [formData, setFormData] = useState({
@@ -20,17 +20,36 @@ const Checkout = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Here is where you'd normally send the data to your backend
+
+    // 2. Logic Flow for Order Completion
+    
+    // A. Show the Success notification
     toast.success('Order Placed Successfully! 🚀', {
       duration: 5000,
       icon: '📦',
     });
-    // Redirect to home after a short delay
-    setTimeout(() => navigate('/'), 2000);
+
+    // B. Wipe the cart clean (updates Navbar and LocalStorage)
+    clearCart();
+
+    // C. Redirect to home after a short delay
+    setTimeout(() => {
+      navigate('/');
+    }, 2500);
   };
 
   if (cartItems.length === 0) {
-    return <div className="text-center py-20">Your cart is empty. Nothing to checkout!</div>;
+    return (
+      <div className="text-center py-20">
+        <h2 className="text-2xl font-bold mb-4">Your cart is empty!</h2>
+        <button 
+          onClick={() => navigate('/')}
+          className="bg-black text-white px-6 py-2 rounded-lg"
+        >
+          Go Shopping
+        </button>
+      </div>
+    );
   }
 
   return (
@@ -117,7 +136,7 @@ const Checkout = () => {
             <span>Total to Pay</span>
             <span>${total.toFixed(2)}</span>
           </div>
-          <p className="text-xs text-gray-400 mt-4 text-center">
+          <p className="text-xs text-gray-400 mt-4 text-center italic">
             Secure Encrypted Checkout
           </p>
         </div>
