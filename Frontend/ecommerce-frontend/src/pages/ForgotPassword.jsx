@@ -8,22 +8,23 @@ const ForgotPassword = () => {
   const [loading, setLoading] = useState(false);
 
   const handleReset = async (e) => {
-    e.preventDefault();
-    if (!email) return toast.error("Please enter your email");
+  e.preventDefault();
+  setLoading(true);
+
+  try {
+    const { data } = await axios.post('http://localhost:5000/api/auth/forgot-password', { email });
     
-    setLoading(true);
-    try {
-      // Ensure this URL matches your backend port exactly (usually 5000)
-      const { data } = await axios.post('http://localhost:5000/api/auth/forgot-password', { email });
-      toast.success("Reset link generated! Check your server terminal.");
-    } catch (error) {
-      console.error("Forgot Password Error:", error);
-      const message = error.response?.data?.message || "Server error. Is the backend running?";
-      toast.error(message);
-    } finally {
-      setLoading(false);
-    }
-  };
+    // This will now show "Reset link sent to your email!" 
+    // because that's what my authController returns in res.json
+    toast.success(data.message); 
+
+  } catch (error) {
+    const message = error.response?.data?.message || "Something went wrong";
+    toast.error(message);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center p-6">
