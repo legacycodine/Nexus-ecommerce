@@ -6,6 +6,9 @@ import Cart from './pages/Cart';
 import Login from './pages/Login';
 import ProductDetails from './pages/ProductDetails';
 import Checkout from './pages/Checkout';
+import OrderSuccess from './pages/OrderSuccess';
+import Profile from './pages/Profile';
+import Register from './pages/Register';
 
 function App() {
   return (
@@ -29,7 +32,10 @@ function App() {
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/order-success" element={<OrderSuccess />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </Router>
   );

@@ -1,49 +1,51 @@
-import React, { useState } from 'react';
-import { useCart } from '../context/CartContext';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-hot-toast';
+import React, { useState } from "react";
+import { useCart } from "../context/CartContext";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 const Checkout = () => {
-  // 1. Pull clearCart from useCart
-  const { cartItems, clearCart } = useCart(); 
+  // 1. Pull saveOrder and clearCart from the context
+  const { cartItems, clearCart, saveOrder } = useCart();
   const navigate = useNavigate();
-  
+
   const total = cartItems.reduce((acc, item) => acc + item.price * item.qty, 0);
 
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    address: '',
-    city: '',
-    phone: ''
+    fullName: "",
+    email: "",
+    address: "",
+    city: "",
+    phone: "",
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // 2. Logic Flow for Order Completion
-    
-    // A. Show the Success notification
-    toast.success('Order Placed Successfully! 🚀', {
-      duration: 5000,
-      icon: '📦',
+    // 2. Save the order to history first using the form data
+    saveOrder({ 
+      customerName: formData.fullName,
+      email: formData.email,
+      address: `${formData.address}, ${formData.city}`
     });
 
-    // B. Wipe the cart clean (updates Navbar and LocalStorage)
+    // 3. Show feedback and clean up
+    toast.success("Success! Processing your order...", { icon: "🚀" });
+
+    // 4. Clear the cart state and localStorage
     clearCart();
 
-    // C. Redirect to home after a short delay
+    // 5. Redirect to the success page
     setTimeout(() => {
-      navigate('/');
-    }, 2500);
+      navigate("/order-success");
+    }, 1500);
   };
 
   if (cartItems.length === 0) {
     return (
       <div className="text-center py-20">
         <h2 className="text-2xl font-bold mb-4">Your cart is empty!</h2>
-        <button 
-          onClick={() => navigate('/')}
+        <button
+          onClick={() => navigate("/")}
           className="bg-black text-white px-6 py-2 rounded-lg"
         >
           Go Shopping
@@ -55,60 +57,81 @@ const Checkout = () => {
   return (
     <div className="max-w-6xl mx-auto p-6">
       <h1 className="text-3xl font-bold mb-8">Checkout</h1>
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Left Side: Shipping Form */}
         <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
           <h2 className="text-xl font-bold mb-6">Shipping Information</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Full Name</label>
-              <input 
-                type="text" required
+              <label className="block text-sm font-medium mb-1">
+                Full Name
+              </label>
+              <input
+                type="text"
+                required
                 className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-black outline-none"
                 placeholder="Esther Ayooluwa"
-                onChange={(e) => setFormData({...formData, fullName: e.target.value})}
+                onChange={(e) =>
+                  setFormData({ ...formData, fullName: e.target.value })
+                }
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Email Address</label>
-              <input 
-                type="email" required
+              <label className="block text-sm font-medium mb-1">
+                Email Address
+              </label>
+              <input
+                type="email"
+                required
                 className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-black outline-none"
                 placeholder="esther@example.com"
-                onChange={(e) => setFormData({...formData, email: e.target.value})}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Shipping Address</label>
-              <input 
-                type="text" required
+              <label className="block text-sm font-medium mb-1">
+                Shipping Address
+              </label>
+              <input
+                type="text"
+                required
                 className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-black outline-none"
                 placeholder="123 Lekki Phase 1, Lagos"
-                onChange={(e) => setFormData({...formData, address: e.target.value})}
+                onChange={(e) =>
+                  setFormData({ ...formData, address: e.target.value })
+                }
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium mb-1">City</label>
-                <input 
-                  type="text" required
+                <input
+                  type="text"
+                  required
                   className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-black outline-none"
                   placeholder="Lagos"
-                  onChange={(e) => setFormData({...formData, city: e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, city: e.target.value })
+                  }
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Phone</label>
-                <input 
-                  type="tel" required
+                <input
+                  type="tel"
+                  required
                   className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-black outline-none"
                   placeholder="+234..."
-                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, phone: e.target.value })
+                  }
                 />
               </div>
             </div>
-            <button 
+            <button
               type="submit"
               className="w-full bg-black text-white py-4 rounded-xl font-bold hover:bg-gray-800 transition mt-6"
             >
@@ -124,10 +147,14 @@ const Checkout = () => {
             {cartItems.map((item) => (
               <div key={item._id} className="flex justify-between items-center">
                 <div className="flex items-center gap-3">
-                  <span className="bg-gray-200 text-xs font-bold px-2 py-1 rounded-full">{item.qty}x</span>
+                  <span className="bg-gray-200 text-xs font-bold px-2 py-1 rounded-full">
+                    {item.qty}x
+                  </span>
                   <span className="font-medium">{item.name}</span>
                 </div>
-                <span className="text-gray-600">${(item.price * item.qty).toFixed(2)}</span>
+                <span className="text-gray-600">
+                  ${(item.price * item.qty).toFixed(2)}
+                </span>
               </div>
             ))}
           </div>
