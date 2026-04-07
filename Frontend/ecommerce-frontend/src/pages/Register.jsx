@@ -25,11 +25,11 @@ const Register = () => {
 
     try {
       // 2. Call your real Backend API
-      const { data } = await axios.post('http://localhost:5000/api/users/register', {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password
-      });
+const { data } = await axios.post('http://localhost:5000/api/auth/register', {
+  name: formData.name,
+  email: formData.email,
+  password: formData.password
+});
 
       // 3. Success! Log them in immediately with the returned JWT
       login(data);
