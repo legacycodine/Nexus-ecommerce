@@ -25,7 +25,7 @@ const Register = () => {
 
     try {
       // 2. Call your real Backend API
-const { data } = await axios.post('http://localhost:5000/api/auth/register', {
+const { data } = await axios.post('https://nexus-ecommerce-yu7k.onrender.com/api/auth/register', {
   name: formData.name,
   email: formData.email,
   password: formData.password

@@ -12,7 +12,7 @@ const ForgotPassword = () => {
   setLoading(true);
 
   try {
-    const { data } = await axios.post('http://localhost:5000/api/auth/forgot-password', { email });
+    const { data } = await axios.post('https://nexus-ecommerce-yu7k.onrender.com/api/auth/forgot-password', { email });
     
     // This will now show "Reset link sent to your email!" 
     // because that's what my authController returns in res.json

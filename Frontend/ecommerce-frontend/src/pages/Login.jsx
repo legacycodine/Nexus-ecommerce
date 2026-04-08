@@ -19,7 +19,7 @@ const Login = () => {
     
     try {
       // 1. Send the real data to your backend
-      const { data } = await axios.post('http://localhost:5000/api/auth/login', {
+      const { data } = await axios.post('https://nexus-ecommerce-yu7k.onrender.com/api/auth/login', {
   email,
   password,
 });

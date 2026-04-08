@@ -16,7 +16,7 @@ const ResetPassword = () => {
 
     try {
       // This matches your /api/auth route structure
-      await axios.put(`http://localhost:5000/api/auth/reset-password/${token}`, { password });
+      await axios.put(`https://nexus-ecommerce-yu7k.onrender.com/api/auth/reset-password/${token}`, { password });
       toast.success("Password updated successfully!");
       navigate('/login');
     } catch (error) {
