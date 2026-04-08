@@ -73,16 +73,20 @@ exports.forgotPassword = async (req, res) => {
     user.resetPasswordExpires = Date.now() + 3600000; 
     await user.save();
 
-    // 2. Setup Transporter (Using Port 587 to avoid Render network blocks)
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false, // Must be false for port 587
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS, 
-      },
-    });
+    // 2. Setup Transporter (Updated to prevent ETIMEDOUT)
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 465, // Direct SSL port
+  secure: true, // true for port 465
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+  // Add these lines to handle slow network handshakes
+  connectionTimeout: 10000, // 10 seconds
+  greetingTimeout: 10000,
+  socketTimeout: 10000,
+});
 
     const resetUrl = `http://localhost:5173/reset-password/${resetToken}`;
 
