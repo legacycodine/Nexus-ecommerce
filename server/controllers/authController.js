@@ -73,12 +73,14 @@ exports.forgotPassword = async (req, res) => {
     user.resetPasswordExpires = Date.now() + 3600000; 
     await user.save();
 
-    // 2. Setup Transporter (Using your .env variables)
+    // 2. Setup Transporter (Using Port 587 to avoid Render network blocks)
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false, // Must be false for port 587
       auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS, // This is your 16-character code
+        pass: process.env.EMAIL_PASS, 
       },
     });
 
